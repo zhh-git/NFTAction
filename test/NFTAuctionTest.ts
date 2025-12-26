@@ -42,7 +42,7 @@ describe("NFTAuction", function () {
 
   it(async function () {
     console.log("deployer Address:", deployer.account.address);
-    console.log("seller Address:", seller.account.address);auctioner
+    console.log("seller Address:", seller.account.address); auctioner
     console.log("buyer Address:", buyer.account.address);
     console.log("auctioner Address:", auctioner.account.address);
     //使用NFT合约创建代币 给卖家创建NFT
@@ -67,20 +67,28 @@ describe("NFTAuction", function () {
     //卖家 去创建ETH tokenId = 1 的拍卖  会将tokenId=1的这个币转给拍卖合约     
 
     //遇到问题在创建拍卖的时候 在转账那部判断权限的时候使用的是proxy的合约地址，导致失败，这是什么原因
+    //回答：因为卖家调用了拍卖合约中的方法，在代理拍卖合约中调用转账的操作是代理拍卖合约去调用，需要授权NFT给拍卖代理合约
+
+    await nftContract.write.approve(
+      [proxy.address, 1n],
+      { account: seller.account }
+    );
+
+
     await nftAuctionProxy.write.createAuction(
       [450n, parseEther("1"), nftContract.address, 1n, ZERO_ADDRESS],
       { account: seller.account }
     );
 
     //买家ETH 参与竞拍
-    await nftAuctionProxy.write.placeBid([parseEther("2"), 1n, ZERO_ADDRESS], {
+    await nftAuctionProxy.write.placeBid([parseEther("2"), 0n, ZERO_ADDRESS], {
       account: buyer.account,
       value: parseEther("2"),
     });
 
     //拍卖结束
     //增加时间 让拍卖结束
-    await (publicClient as any).request({method: "evm_increaseTime",params: [500]});
+    await (publicClient as any).request({ method: "evm_increaseTime", params: [500] });
     //拍卖者结束拍卖
     await nftAuctionProxy.write.endAuction([0n, nftContract.address], {
       account: auctioner.account,

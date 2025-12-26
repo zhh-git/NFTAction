@@ -1,9 +1,10 @@
 import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
 
 export default buildModule("NFTAuctionMoudles", (m) => {
-  const deployer = m.getAccount(0);
+  const deployer = m.getAccount(0);//写数据 需要签名
 
   const platformFeeRecipient = m.getAccount(1); //部署通过配置获取，如果正式网上应该如何配置，也是前期要求在配置文件中提前配置好吗
+  //钱包地址   私钥目的做签名
 
   //1、部署逻辑合约
   const nftImplementation = m.contract("NFTAuction", [], {id: "nftImplementation", from: deployer });
@@ -36,6 +37,6 @@ export default buildModule("NFTAuctionMoudles", (m) => {
   );
 
   return {
-    nftAuction: proxy, //应该导出 proxy 还是关联后的nftAuctionProxy
+    proxy, //应该导出 proxy 还是关联后的nftAuctionProxy
   };
 }); //目前该部署脚本部署失败

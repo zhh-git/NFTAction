@@ -136,9 +136,10 @@ contract NFTAuction is
         });
 
         //将对应的token转给拍卖合约，这样拍卖合约才能拍卖
-        nft.transferFrom(nftcontract_, address(this), tokenId_);
+        nft.transferFrom(msg.sender, address(this), tokenId_);
 
         emit AuctionCreated(msg.sender, auctionId, nftcontract_, duration_, block.timestamp, startPrice_, tokenId_);
+        nextAuctionId++;
     }
 
     //参加拍卖
@@ -295,11 +296,14 @@ contract NFTAuction is
     ) internal view virtual returns (uint256) {
         AggregatorV3Interface feed = priceFeeds[_payToken];
         require(address(feed) != address(0), "Price feed not set for payToken");
-
+        console.log("address(feed): ", address(feed));
         (, int256 priceRaw, , , ) = feed.latestRoundData();
         require(priceRaw > 0, "Invalid price from feed");
         uint256 price = uint256(priceRaw);
         uint256 feedDecimal = feed.decimals();
+        console.log("price: ", price);
+        console.log("feedDecimal: ",feedDecimal);
+        console.log("_amount: ", _amount);
         if (address(0) == _payToken) {
             return (price * _amount) / (10 ** (12 + feedDecimal)); // ETH 10**(18 + feedDecimal - 6) = 10**(12 + feedDecimal)
         } else {

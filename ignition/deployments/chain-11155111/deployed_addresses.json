@@ -1,4 +1,6 @@
 {
   "NFTContractMoudles#NFTContract": "0xAcDD8344c2A9eB9767E82069B6933Ad9943c4162",
-  "NFTAuctionMoudles#nftImplementation": "0x4Afa840208Db11B9d3045a614b34F3E24255F36c"
+  "NFTAuctionMoudles#nftImplementation": "0x4Afa840208Db11B9d3045a614b34F3E24255F36c",
+  "NFTAuctionMoudles#proxy": "0x7E9DfE0D4B4FE6dAEE2007429C4f6a1d0105D017",
+  "NFTAuctionMoudles#nftAuctionProxy": "0x7E9DfE0D4B4FE6dAEE2007429C4f6a1d0105D017"
 }
